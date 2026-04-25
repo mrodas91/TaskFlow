@@ -22,6 +22,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+*.dll
+*.exe
+*.pdb
 
 # .NET Core
 project.lock.json
@@ -52,3 +55,12 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio
+.vs/
+*.sln.iml
+.vscode/
+
+# User-specific files
+.user
+appsettings.*.json
