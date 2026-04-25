@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaskFlow.Application.Commands;
+using TaskFlow.Application.Features.Teams.Queries;
+using TaskFlow.Application.Features.Teams.Commands;
 
 namespace TaskFlow.API.Controllers;
 
@@ -20,6 +21,13 @@ public class TeamsController : ControllerBase
     {
         var result = await _mediator.Send(command);
 
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetTeams()
+    {        
+        var result = await _mediator.Send(new GetTeamsQuery());
         return Ok(result);
     }
 }

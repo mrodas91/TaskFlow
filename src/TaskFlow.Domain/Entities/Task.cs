@@ -1,7 +1,7 @@
 using TaskFlow.Domain.Enums;
 using TaskStatus = TaskFlow.Domain.Enums.TaskStatus;
 
-namespace TaskFlow.Domain.Models;
+namespace TaskFlow.Domain.Entities;
 
 public class TaskItem
 {

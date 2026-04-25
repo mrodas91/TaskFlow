@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TaskFlow.Application.Commands;
-using TaskFlow.Application.Interface;
+using TaskFlow.Application.Features.Teams.Commands;
+using TaskFlow.Application.Interfaces.Repositories;
 using TaskFlow.Infrastructure.Data;
 using TaskFlow.Infrastructure.Repositories;
 

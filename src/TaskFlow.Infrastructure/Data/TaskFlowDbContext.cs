@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TaskFlow.Domain.Models;
-using TaskItem = TaskFlow.Domain.Models.TaskItem;
+using TaskFlow.Domain.Entities;
+using TaskItem = TaskFlow.Domain.Entities.TaskItem;
 
 namespace TaskFlow.Infrastructure.Data;
 

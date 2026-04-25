@@ -1,4 +1,4 @@
-namespace TaskFlow.Domain.Models;
+namespace TaskFlow.Domain.Entities;
 
 public class Team
 {

@@ -1,9 +1,8 @@
 using MediatR;
-using TaskFlow.Application.Commands;
-using TaskFlow.Application.Interface;
-using TaskFlow.Domain.Models;
+using TaskFlow.Domain.Entities;
+using TaskFlow.Application.Interfaces.Repositories;
 
-namespace TaskFlow.Application.Handlers;
+namespace TaskFlow.Application.Features.Teams.Commands;
 
 public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, Guid>
 {
@@ -22,8 +21,7 @@ public class CreateTeamHandler : IRequestHandler<CreateTeamCommand, Guid>
             Name = request.Name
         };
 
-        await _repo.AddAsync(team);
-        await _repo.SaveChangesAsync();
+        await _repo.AddAsync(team, cancellationToken);
 
         return team.Id;
     }
