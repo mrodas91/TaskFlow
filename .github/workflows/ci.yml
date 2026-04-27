@@ -1,0 +1,34 @@
+# ¿Cuándo se dispara este workflow?
+on:
+  push:
+    branches: [ main, develop ]        # Al hacer push directo a main
+  pull_request:
+    branches: [ main, develop ]        # Al abrir/actualizar un PR hacia main
+
+jobs:
+  build-and-test:
+    # ¿En qué máquina corre?
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descarga el código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Instala .NET 8 en esa máquina virtual
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # 3. Restaura los paquetes NuGet (equivalente a npm install)
+      - name: Restore dependencies
+        run: dotnet restore src/TaskFlow.sln
+
+      # 4. Compila el proyecto
+      - name: Build
+        run: dotnet build src/TaskFlow.sln --no-restore --configuration Release
+
+      # 5. Ejecuta los tests
+      #- name: Test
+      #  run: dotnet test src/TaskFlow.sln --no-build --configuration Release
