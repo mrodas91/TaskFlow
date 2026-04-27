@@ -33,6 +33,10 @@ export default function TasksPage() {
     return () => { cancelled = true; };
   }, [teamId]);
 
+  function handleDeleted(taskId) {
+    setTasks((prev) => prev.filter(t => t.id !== taskId));
+  }
+
   return(
     <main style={styles.main}>
       <header style={styles.header}>
@@ -42,10 +46,10 @@ export default function TasksPage() {
             {loading ? '...' : `${tasks.length} task${tasks.length !== 1 ? 's' : ''} registered${tasks.length !== 1 ? 's' : ''}`}
           </p>
         </div>
-        <Link to="/create" style={styles.button}>+ New Task</Link>
+        <Link to={`/teams/${teamId}/tasks/create`} style={styles.button}>+ New Task</Link>
       </header>
 
-      <TaskList tasks={tasks} loading={loading} error={error} />
+      <TaskList tasks={tasks} loading={loading} error={error} onDeleted={handleDeleted}/>
     </main>
   );
 

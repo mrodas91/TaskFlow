@@ -23,3 +23,26 @@ export async function createTask(title, description, teamId) {
 
   return response.json();
 }
+
+export async function deleteTask(taskId)
+{
+  const response = await fetch(`${BASE_URL}/${taskId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error al eliminar tarea: ${response.status}`);
+  }
+}
+
+export async function changeStatusTask(taskId, newTaskStatus) {
+  const response = await fetch(BASE_URL, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ taskId, newTaskStatus }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error al actualizar status: ${response.status}`);
+  }
+}

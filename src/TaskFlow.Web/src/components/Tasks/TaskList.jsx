@@ -1,6 +1,6 @@
 import TaskCard from "./TaskCard";
 
-export default function TaskList({ tasks, loading, error }) {
+export default function TaskList({ tasks, loading, error, onDeleted }) {
     if (loading) {
         return <p style={styles.message}>Cargando equipos...</p>;
     }
@@ -20,7 +20,7 @@ export default function TaskList({ tasks, loading, error }) {
   return (
     <div style={styles.grid}>
       {tasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
+        <TaskCard key={task.id} task={task} onDeleted={onDeleted} />
       ))}
     </div>
   );

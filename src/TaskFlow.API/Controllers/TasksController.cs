@@ -30,4 +30,19 @@ public class TasksController : ControllerBase
         var result = await _mediator.Send(new GetTasksQuery(teamId));
         return Ok(result);
     }
+
+    [HttpPatch]
+    public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusCommand command)
+    {
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+
+    [HttpDelete("{taskId}")]
+    public async Task<IActionResult> DeleteTask(Guid taskId)
+    {
+        await _mediator.Send(new DeleteTaskCommand(taskId));
+        return NoContent();
+    }
 }
