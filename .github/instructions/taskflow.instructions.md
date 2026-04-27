@@ -1,7 +1,7 @@
 ---
 name: taskflow-instructions
-description: "Use when: working on TaskFlow project development. Enforces clean architecture CQRS patterns, C# coding conventions, feature-based structure, EF Core best practices, and quality standards."
-applyTo: "src/**/*.cs"
+description: "Use when: working on TaskFlow project development. Enforces clean architecture CQRS patterns, C# coding conventions, React/Vite frontend conventions, feature-based structure, EF Core best practices, and quality standards."
+applyTo: "src/**/*.{cs,js,jsx}"
 ---
 
 # TaskFlow Development Instructions
@@ -156,6 +156,59 @@ TaskFlow.Application/
 | **TaskFlow.Application** | CQRS handlers, orchestration, DTOs | No database calls directly; use repositories |
 | **TaskFlow.Domain** | Entities, enums, constraints | No dependencies on other layers |
 | **TaskFlow.Infrastructure** | Repositories, DbContext, migrations | Only layer that touches SQL Server |
+
+---
+
+## TaskFlow.Web Frontend
+
+TaskFlow.Web is a React 18 + Vite frontend. Keep UI logic separate from API access, prefer functional components and hooks, and organize pages, components, and services clearly.
+
+### Frontend Structure
+
+- `src/pages/` contains top-level route pages
+- `src/components/` contains reusable UI components
+- `src/services/` contains API service modules and fetch logic
+- `src/assets/` contains static media
+- `src/App.jsx` wires routing and global layout
+
+### React + Vite Conventions
+
+- Use **functional components** exclusively
+- Use `useEffect` + `useState` for data loading and local state
+- Keep components focused: presentational components should receive props, pages should handle data fetching
+- Use `const` for component declarations and functions
+- Prefer clear prop names and destructuring
+- Use `React Router v6` patterns with `Routes` and `Route`
+
+### API Services
+
+- Encapsulate HTTP calls in `src/services/*Service.js`
+- Keep fetch details out of components
+- Use `async/await`, centralized base URLs, and error handling in service functions
+- Return plain JSON objects and map them to component props in pages
+
+```js
+export async function getTeams() {
+  const response = await fetch('/api/teams');
+  if (!response.ok) throw new Error('Unable to load teams');
+  return await response.json();
+}
+```
+
+### UI and Styling
+
+- Keep styling in `src/App.css` and `src/index.css` unless a component needs narrow scoped styles
+- Prefer semantic HTML: buttons, forms, headings, lists
+- Keep markup accessible: use `alt`, `aria-*`, and meaningful text labels
+- Use layout components like `Navbar`, `TeamCard`, `TaskCard` for reuse
+
+### Frontend Quality Standards
+
+- Validate user input in the page before sending requests
+- Show loading and error states in UI
+- Keep component props minimal and explicit
+- Avoid inline fetch calls in JSX
+- Follow consistent component/file naming: `PascalCase.jsx` for components and pages
 
 ---
 
@@ -375,6 +428,12 @@ dotnet test
 
 # Run API server
 dotnet run --project TaskFlow.API
+
+# Run frontend
+npm install --prefix src/TaskFlow.Web
+npm run dev --prefix src/TaskFlow.Web
+# Build frontend
+npm run build --prefix src/TaskFlow.Web
 ```
 
 Connection string: `Server=localhost;Database=TaskFlowDb;User Id=sa;Password=Passw0rd!`
@@ -391,4 +450,5 @@ Connection string: `Server=localhost;Database=TaskFlowDb;User Id=sa;Password=Pas
 | Handle errors | Custom exception in Domain, catch in Controller |
 | Add validation | Validate in Handler before repository call |
 | Query related data | Include via EF Core `.Include()`, map in handler |
+| Add frontend page | Create page in `src/TaskFlow.Web/src/pages`, route it in `App.jsx`, use service module for API calls |
 

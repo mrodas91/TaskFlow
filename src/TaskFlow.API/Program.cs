@@ -15,6 +15,7 @@ builder.Services.AddDbContext<TaskFlowDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 // Registrar MediatR
 builder.Services.AddMediatR(cfg =>
