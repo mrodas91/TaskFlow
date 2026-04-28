@@ -1,0 +1,31 @@
+# ─── STAGE 1: BUILD ───────────────────────────────────────────
+# Node para compilar el proyecto React
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Primero solo package.json para aprovechar caché
+# Si no cambian las dependencias, no vuelve a hacer npm install
+COPY package*.json ./
+
+RUN npm install
+
+# Ahora el resto del código
+COPY . .
+
+# Genera la carpeta dist/ con el build de producción
+RUN npm run build
+
+# ─── STAGE 2: RUNTIME ─────────────────────────────────────────
+# Nginx sirve los archivos estáticos — es muy ligero
+FROM nginx:alpine AS runtime
+
+# Copiamos el resultado del build al directorio que sirve Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Configuración de Nginx para que React Router funcione correctamente
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
