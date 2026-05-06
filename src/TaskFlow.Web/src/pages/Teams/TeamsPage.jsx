@@ -1,30 +1,10 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import TeamList from '../components/TeamList';
-import { getTeams } from '../services/teamsService';
+import TeamList from '../../components/Teams/TeamList';
+import { useFetch } from '../../hooks/useFetch';
+import { getTeams } from '../../services/teamsService';
 
 export default function TeamsPage() {
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchTeams() {
-      try {
-        const data = await getTeams();
-        if (!cancelled) setTeams(data);
-      } catch (err) {
-        if (!cancelled) setError(err.message);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    fetchTeams();
-    return () => { cancelled = true; };
-  }, []);
+  const { data: teams, loading, error } = useFetch(getTeams, []);
 
   return (
     <main style={styles.main}>
