@@ -1,40 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import TaskList from '../../components/Tasks/TaskList';
+import { useFetch } from '../../hooks/useFetch';
 import { getTasks } from '../../services/tasksService';
 
 export default function TasksPage() {
   const { teamId } = useParams();
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchTasks(){
-        try {
-            const data = await getTasks(teamId);
-            if (!cancelled) setTasks(data);
-        } catch (err) {
-            if (!cancelled) setError(err.message);
-        } finally {
-            if (!cancelled) setLoading(false);
-        }
+  const [deletedTaskIds, setDeletedTaskIds] = useState([]);
+  const { data: tasks, loading, error } = useFetch(async () => {
+    if (!teamId) {
+      throw new Error('Team ID no encontrado');
     }
 
-    if (teamId) {
-      fetchTasks();
-    } else {
-      setError('Team ID no encontrado');
-      setLoading(false);
-    }
-
-    return () => { cancelled = true; };
+    return getTasks(teamId);
   }, [teamId]);
 
+  useEffect(() => {
+    setDeletedTaskIds([]);
+  }, [teamId]);
+
+  const visibleTasks = tasks.filter((task) => !deletedTaskIds.includes(task.id));
+
   function handleDeleted(taskId) {
-    setTasks((prev) => prev.filter(t => t.id !== taskId));
+    setDeletedTaskIds((prev) => [...prev, taskId]);
   }
 
   return(
@@ -43,13 +31,13 @@ export default function TasksPage() {
         <div>
           <h1 style={styles.title}>Tasks</h1>
           <p style={styles.subtitle}>
-            {loading ? '...' : `${tasks.length} task${tasks.length !== 1 ? 's' : ''} registered${tasks.length !== 1 ? 's' : ''}`}
+            {loading ? '...' : `${visibleTasks.length} task${visibleTasks.length !== 1 ? 's' : ''} registered${visibleTasks.length !== 1 ? 's' : ''}`}
           </p>
         </div>
         <Link to={`/teams/${teamId}/tasks/create`} style={styles.button}>+ New Task</Link>
       </header>
 
-      <TaskList tasks={tasks} loading={loading} error={error} onDeleted={handleDeleted}/>
+      <TaskList tasks={visibleTasks} loading={loading} error={error} onDeleted={handleDeleted}/>
     </main>
   );
 

@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { deleteTask, changeStatusTask } from "../../services/tasksService";
+import styles from './TaskCard.module.css';
 
 const STATUS_OPTIONS = [
   { value: 0, label: 'Pending' },
   { value: 1, label: 'In Progress' },
   { value: 2, label: 'Completed' },
-]
+];
 
-const STATUS_STYLES = {
-  0: { backgroundColor: '#fbbf24', color: '#fff' }, // Pending - Yellow
-  1: { backgroundColor: '#3b82f6', color: '#fff' }, // In Progress - Blue
-  2: { backgroundColor: '#10b981', color: '#fff' }, // Completed - Green
+const statusClassMap = {
+  0: styles.pending,
+  1: styles.inProgress,
+  2: styles.completed,
 };
 
 export default function TaskCard({ task, onDeleted }) {
@@ -45,30 +46,30 @@ export default function TaskCard({ task, onDeleted }) {
     }
   }
 
-  const badge = STATUS_STYLES[status] ?? STATUS_STYLES[0];
+  const badgeClassName = `${styles.badge} ${statusClassMap[status] ?? styles.pending}`;
 
   return (
-    <div style={styles.card}>
-      <div style={styles.header}>
-        <p style={styles.title}>{task.title}</p>
-        <button onClick={handleDelete} disabled={deleting} style={styles.deleteBtn} title="Delete task">
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <p className={styles.title}>{task.title}</p>
+        <button onClick={handleDelete} disabled={deleting} className={styles.deleteBtn} title="Delete task">
           {deleting ? '...' : 'X'}
         </button>
       </div>
 
       {/* Descripción */}
-      <p style={styles.description}>{task.description}</p>
+      <p className={styles.description}>{task.description}</p>
 
       {/* Combo de status con color semáforo */}
-      <div style={styles.statusRow}>
-        <span style={{ ...styles.badge, ...badge }}>
-          {STATUS_OPTIONS.find((s) => s.value === status)?.label ?? 'Pending'}
+      <div className={styles.statusRow}>
+        <span className={badgeClassName}>
+            {STATUS_OPTIONS.find((s) => s.value === status)?.label ?? 'Pending'}
         </span>
         <select
           value={status}
           onChange={handleStatusChange}
           disabled={updatingStatus}
-          style={styles.select}
+          className={styles.select}
         >
           {STATUS_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -80,70 +81,3 @@ export default function TaskCard({ task, onDeleted }) {
     </div>
   );
 }
-
-const styles = {
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    backgroundColor: '#fff',
-    border: '1px solid #e2e8f0',
-    borderRadius: '10px',
-    padding: '16px 20px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: '8px',
-  },
-  title: {
-    margin: 0,
-    fontSize: '15px',
-    fontWeight: '600',
-    color: '#1e293b',
-    flex: 1,
-  },
-  deleteBtn: {
-    border: 'none',
-    background: 'transparent',
-    color: '#94a3b8',
-    fontSize: '16px',
-    cursor: 'pointer',
-    padding: '0 4px',
-    lineHeight: 1,
-    transition: 'color 0.2s',
-    flexShrink: 0,
-  },
-  description: {
-    margin: 0,
-    fontSize: '13px',
-    color: '#64748b',
-    lineHeight: '1.5',
-  },
-  statusRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginTop: '4px',
-  },
-  badge: {
-    fontSize: '11px',
-    fontWeight: '600',
-    padding: '3px 10px',
-    borderRadius: '99px',
-    border: '1px solid',
-    whiteSpace: 'nowrap',
-  },
-  select: {
-    fontSize: '13px',
-    padding: '4px 8px',
-    borderRadius: '6px',
-    border: '1px solid #cbd5e1',
-    color: '#374151',
-    backgroundColor: '#f8fafc',
-    cursor: 'pointer',
-    outline: 'none',
-  },
-};
