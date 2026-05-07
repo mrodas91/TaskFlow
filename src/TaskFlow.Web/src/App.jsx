@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import TeamsPage from './pages/TeamsPage';
-import CreateTeamPage from './pages/CreateTeamPage';
+import TeamsPage from './pages/Teams/TeamsPage';
+import CreateTeamPage from './pages/Teams/CreateTeamPage';
 import TasksPage from './pages/Tasks/TasksPage';
 import CreateTaskPage from './pages/Tasks/CreateTaskPage';
 
